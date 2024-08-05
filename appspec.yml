@@ -1,0 +1,14 @@
+ version: 0.0
+Resources:
+  - MyLambdaFunction:
+      Type: AWS::Lambda::Function
+      Properties:
+        Name: aws-demo
+        Alias: live
+Hooks:
+  BeforeAllowTraffic:
+    - location: BeforeAllowTrafficHookFunction
+      timeout: 900
+  AfterAllowTraffic:
+    - location: AfterAllowTrafficHookFunction
+      timeout: 900
