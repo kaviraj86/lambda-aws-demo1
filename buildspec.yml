@@ -1,16 +1,25 @@
 version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      python: 3.8
+    commands:
+      - echo "Installing dependencies"
+      - echo "Listing contents of the current directory:"
+      - ls -la
+      - if [ -f requirements.txt ]; then pip install -r requirements.txt -t .; else echo "requirements.txt not found"; fi
+  pre_build:
+    commands:
+      - echo "Pre-build phase started"
   build:
     commands:
-    - echo "This is build phase... Zipping my lambda function"
-    - zip -r deployment_package.zip lambda_function.py contactus.html success.html
+      - echo "Build phase started"
+      - zip -r lambda_function.zip .
   post_build:
     commands:
-    - echo "Deploying to the Lambda"
-    - aws lambda update-function-code --function-name  "aws-demo" --zip-file fileb://deployment_package.zip
-    - aws lambda publish-version --function-name  "aws-demo"
+      - echo "Build phase completed"
+      - ls -la  # List directory contents after build
 artifacts:
-  type: zip
-  paths:
-    - '*'
+  files:
+    - lambda_function.zip
