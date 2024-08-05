@@ -1,21 +1,16 @@
 version: 0.2
 
 phases:
-  install:
-    runtime-versions:
-       python: python3.8
-  pre_build:
-    commands:
-      - echo Nothing to do in the pre_build phase...
   build:
     commands:
-      - echo Build started on `date`
-      
+    - echo "This is build phase... Zipping my lambda function"
+    - zip -r deployment_package.zip lambda_function.py contactus.html success.html
   post_build:
     commands:
-      - echo Build completed on `date`
+    - echo "Deploying to the Lambda"
+    - aws lambda update-function-code --function-name  "aws-demo" --zip-file fileb://deployment_package.zip
+    - aws lambda publish-version --function-name  "aws-demo"
 artifacts:
-  files:
-    - contactus.html
-    - lambda_function.py
-    - success.html
+  type: zip
+  paths:
+    - '*'
